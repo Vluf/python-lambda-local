@@ -3,7 +3,7 @@ Copyright 2015-2017 HDE, Inc.
 Licensed under MIT.
 '''
 
-import signal
+from threading import Timer
 from contextlib import contextmanager
 
 
@@ -13,10 +13,10 @@ class TimeoutException(Exception):
 
 @contextmanager
 def time_limit(seconds):
-    def signal_handler(signum, frame):
+    def timeout_handler():
         raise TimeoutException("Timeout after {} seconds.".format(seconds))
-    signal.signal(signal.SIGALRM, signal_handler)
-    signal.alarm(seconds)
+    t = Timer(seconds, timeout_handler)
+    t.start()
     try:
         yield
     finally:
