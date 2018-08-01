@@ -20,4 +20,4 @@ def time_limit(seconds):
     try:
         yield
     finally:
-        signal.alarm(0)
+        t.cancel()
